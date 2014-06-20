@@ -31,7 +31,7 @@ $upload_dir = wp_upload_dir();
 			<input type="hidden" name="meta_save_type[]" value="<?php echo $meta_type_sg_doc_schema; ?>" />
 			<textarea style="width:100%" rows="5" cols="50" name="<?php echo $meta_type_sg_doc_schema; ?>"><?php echo $current_sg_doc_schema; ?></textarea>		
 			<input type="hidden" name="meta_save_type[]" value="<?php echo $meta_type_sg_doc_schema_directory; ?>" />
-			<label for "<?php echo $meta_type_sg_doc_schema_directory; ?>">Save in <br /><?php echo $upload_dir['path']; ?>/sg-docs/</label>
+			<label for "<?php echo $meta_type_sg_doc_schema_directory; ?>">Save in <br /><?php echo $upload_dir['url']; ?>/sg-docs/</label>
 			<input type="text" name="<?php echo $meta_type_sg_doc_schema_directory; ?>" value="<?php echo $current_sg_doc_schema_directory; ?>" />
 		
 	</fieldset>

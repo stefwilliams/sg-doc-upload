@@ -41,8 +41,6 @@ function register_cpt_sg_doc() {
         'rewrite' => false,
         'capability_type' => 'post',
         'supports' => false,
-        // 'capabilities' => array(
-        //     'create_posts' => false, )
         );
 
     register_post_type( 'sg_doc', $args );

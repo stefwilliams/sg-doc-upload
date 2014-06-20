@@ -41,8 +41,17 @@ function register_cpt_sg_doc_schema() {
         'rewrite' => false,
         'capability_type' => 'post',
         'supports' => 'title',
-        // 'capabilities' => array(
-        //     'create_posts' => false, )
+        'capabilities' => array(
+            'publish_posts' => 'manage_options',
+            'edit_posts' => 'manage_options',
+            'edit_others_posts' => 'manage_options',
+            'delete_posts' => 'manage_options',
+            'delete_others_posts' => 'manage_options',
+            'read_private_posts' => 'manage_options',
+            'edit_post' => 'manage_options',
+            'delete_post' => 'manage_options',
+            'read_post' => 'manage_options',
+            ),
     );
 
     register_post_type( 'sg_doc_schema', $args );
