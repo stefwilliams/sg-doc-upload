@@ -1,5 +1,4 @@
 <?php
-
 //this is the main function that saves the post meta for all the custom types.
 
 function save_sg_doc_meta ($post_id) {

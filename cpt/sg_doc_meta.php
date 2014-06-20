@@ -1,5 +1,4 @@
 <?php
-
 //Course Meta fields
 
 add_action('admin_menu', 'sg_doc_meta');

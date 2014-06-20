@@ -7,7 +7,6 @@ function add_multipart_form() {
 function sg_regex_schema_filename ($post_id, $giveme="string") {
 
 	$the_schema_string = get_post_meta( $post_id, 'schema', true );
-
 	$markers = array ( 
 		//add values as necessary for new tags, but add:
 		//corresponding function to return formatted value, ie, sg_schema_process_TEXT($position, $value, $schema_string, $giveme); and 

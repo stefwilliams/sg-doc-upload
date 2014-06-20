@@ -8,7 +8,6 @@ Author: Stef Williams
 Author URI: http://URI_Of_The_Plugin_Author
 License: GPL2
 */
-
 include ('cpt/sg_doc_schema.php'); 				//register doc_schema types
 include ('cpt/sg_doc_schema_meta.php');			//add schema meta fields
 include ('cpt/sg_doc.php');						//register doc type and redirect to post-new.php with query string based on schema
