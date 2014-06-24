@@ -4,22 +4,51 @@ function add_multipart_form() {
     echo ' enctype="multipart/form-data"';
 }
 
-function sg_regex_schema_filename ($post_id, $giveme="string") {
-
-	$the_schema_string = get_post_meta( $post_id, 'schema', true );
+function sg_doc_schema_markers() {
 	$markers = array ( 
 		//add values as necessary for new tags, but add:
 		//corresponding function to return formatted value, ie, sg_schema_process_TEXT($position, $value, $schema_string, $giveme); and 
 		//corresponding dummy values, $text_value, $date_value, etc
-		'TEXT', 
-		'DATE', 
-		'CONST', 
-		'CHECK',
+		'TEXT' => array (
+			'format' => 'label',
+			'example' => 'Title',
+			'separators' => null,
+			'notes'	=> "This is a simple text box, presented to the user, in which they can enter a string of text. <br /> The text will be sanitized before being written to the DB or filename."
+			), 
+		'DATE' => array (
+			'format' => 'label:dateformat',
+			'example' => 'Date of meeting: Y-m',
+			'separators' => ":",
+			'notes'	=> "This presents the user with a datepicker, with your chosen label next to it. <br />The date is formatted according to <a href='http://www.php.net//manual/en/function.date.php'> PHP Date syntax </a>."
+			),  
+		'CONST' => array (
+			'format' => 'label',
+			'example' => 'Minutes',
+			'separators' => null,
+			'notes' => "This allows you to enter a constant value, which will always be added to the new filename."
+			),  
+		'CHECK' => array (
+			'format' => 'label:checked|unchecked',
+			'example' => 'Revision?',
+			'separators' => ": |",
+			'notes' => "Presents users with a checkbox. Your label is appended to instruct whether the box should be checked. <br />The two options supplied are what will be appended to the filename. First option is checked, second is unchecked."
+			), 
 		);
+
+		return $markers;
+}
+
+
+
+function sg_regex_schema_filename ($post_id, $giveme="string") {
+
+	$the_schema_string = get_post_meta( $post_id, 'schema', true );
+
+	$markers = sg_doc_schema_markers();
 
 	$allmatches = array();
 
-	foreach ($markers as $marker) {
+	foreach ($markers as $marker => $options) {
 
 		preg_match_all('#\['.$marker.'\](.*?)\[\/'.$marker.'\]#', $the_schema_string, $matches, PREG_OFFSET_CAPTURE);
 		
