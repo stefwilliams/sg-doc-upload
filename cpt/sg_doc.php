@@ -18,7 +18,6 @@ function register_cpt_sg_doc() {
         'not_found' => _x( 'No documents found', 'sg_doc' ),
         'not_found_in_trash' => _x( 'No documents found in Trash', 'sg_doc' ),
         'parent_item_colon' => _x( 'Parent document', 'sg_doc' ),
-        // 'menu_name' => _x( 'Document Uploads', 'sg_doc' ),
         'all_items' => _x( 'All Documents', 'sg_doc' ),
         );
 
@@ -26,13 +25,10 @@ function register_cpt_sg_doc() {
         'labels' => $labels,
         'hierarchical' => false,
         'description' => 'Allow uploads of documents according to predefined naming conventions.',
-        //'supports' => array( 'title' ),        
         'public' => true,
         'show_ui' => true,
         'show_in_menu' => 'edit.php?post_type=sg_doc_schema',
         'menu_position' => 20,
-        // 'menu_icon' => 'dashicons-media-document',
-        // 'show_in_nav_menus' => false,
         'publicly_queryable' => true,
         'exclude_from_search' => true,
         'has_archive' => false,
@@ -64,7 +60,6 @@ function sg_doc_redirect () {
 			'post_status'		=>	'publish' )
 		);
 	$page_title = get_admin_page_title();
-    // print_r($doc_schemas);
     ?>
     <div class="wrap">
         <h2><?php echo $page_title; ?></h2>

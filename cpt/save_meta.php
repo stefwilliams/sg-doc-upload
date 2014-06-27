@@ -140,12 +140,9 @@ if ($upload_subdir) {
 else {
     $upload_subdir = "/sg-docs";
 }
-    error_log(var_export($post, true));
-    error_log(var_export($upload_subdir, true));
     $upload_dir['path']   = $upload_dir['basedir'] . $upload_dir['subdir'] . $upload_subdir;
     $upload_dir['url']    = $upload_dir['baseurl'] . $upload_dir['subdir'] . $upload_subdir;
 
-    error_log(var_export($upload_dir, true));
     return $upload_dir;
 }
 /* Save post meta on the 'save_post' hook. */
@@ -166,10 +163,7 @@ function sg_doc_delete_attached_files($post_id) {
     if ($post_type != 'sg_doc') {
         return;
     }
-    // error_log(var_export($post_id,true));
-
     $existing_upload = unserialize(get_post_meta( $post_id, 'file_upload', true  ));
-    // error_log(var_export($existing_upload,true));
     unlink($existing_upload['file']);
 }
 

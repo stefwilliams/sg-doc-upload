@@ -7,8 +7,7 @@ function add_multipart_form() {
 function sg_doc_schema_markers() {
 	$markers = array ( 
 		//add values as necessary for new tags, but add:
-		//corresponding function to return formatted value, ie, sg_schema_process_TEXT($position, $value, $schema_string, $giveme); and 
-		//corresponding dummy values, $text_value, $date_value, etc
+		//corresponding function to return formatted value, ie, sg_schema_process_TEXT($position, $value, $schema_string, $giveme); 
 		'TEXT' => array (
 			'format' => 'label',
 			'example' => 'Title',
@@ -48,7 +47,7 @@ function sg_regex_schema_filename ($post_id, $giveme="string") {
 
 	$allmatches = array();
 
-	foreach ($markers as $marker => $options) {
+	foreach ($markers as $marker => $extra_info) {
 
 		preg_match_all('#\['.$marker.'\](.*?)\[\/'.$marker.'\]#', $the_schema_string, $matches, PREG_OFFSET_CAPTURE);
 		
@@ -66,9 +65,7 @@ ksort($allmatches); //ensure that regex finds are put back into correct order
 
 
 $allmatches = array_values($allmatches); //reset keys to start at 0 to avoid any problems with offset value changing
-// echo "<pre>allmatches";
-// print_r($allmatches);
-// echo "<hr /></pre>";
+
 if ($giveme == "string") {
 	$return = sg_schema_return_strings($allmatches);
 	return $return;
@@ -77,8 +74,14 @@ elseif ($giveme == "formfield") {
 	$return = sg_schema_return_formfields($allmatches);
 	return $return;
 }
+elseif ($giveme == "metafields") {
+	$metafields = array();
+	foreach ($allmatches as $key => $field) {
+		array_push($metafields, strtolower($field['marker'].$key));
+	}
+	return $metafields;
+}
 
-// return $return;
 }
 
 function sg_schema_return_strings($allmatches) {
@@ -88,7 +91,6 @@ $theformattedstring = "";
 	foreach ($allmatches as $position => $match) {
 
 		$return = call_user_func('sg_schema_process_'.$match['marker'], $position, $match, 'string');
-		// $return = sg_schema_process_.$match['marker']();
 
 		$theformattedstring = $theformattedstring.$return;		
 
@@ -104,7 +106,6 @@ function sg_schema_return_formfields($allmatches) {
 	foreach ($allmatches as $position => $match) {
 
 		$return = call_user_func('sg_schema_process_'.$match['marker'], $position, $match, 'formfield');
-		// $return = sg_schema_process_.$match['marker']();
 
 		array_push($theformfields, $return);		
 

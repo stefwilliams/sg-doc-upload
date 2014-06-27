@@ -14,3 +14,6 @@ include ('cpt/sg_doc.php');						//register doc type and redirect to post-new.ph
 include ('cpt/sg_doc_meta.php');				//add meta fields based on schema definition
 include ('cpt/save_meta.php');					//functions to save ALL custom metadata
 include ('functions.php');						//all other plugin-related functions
+include ('shortcodes/sg_doc_list.php');			//shortcodes
+
+add_filter('widget_text', 'do_shortcode'); 		//allows shortcodes to go in text widget

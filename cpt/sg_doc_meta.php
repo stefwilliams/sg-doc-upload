@@ -2,8 +2,6 @@
 //Course Meta fields
 
 add_action('admin_menu', 'sg_doc_meta');
-// global $post;
-// $post_id = $post->ID;
 
 function sg_doc_meta() {
 	if (isset($_GET['schema'])) {
@@ -25,7 +23,6 @@ function sg_doc_meta_inputs($post, $schema_id){
 	$schema_id = $schema_id['args']['schema_id'];
 
 	$post_id = $post->ID;
-	// print_r($post_id);
 	$formfields = sg_regex_schema_filename ($schema_id, "formfield");
 	$current_sg_schema = $schema_id;
 	$meta_type_sg_schema = 'schema_applied';
