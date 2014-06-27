@@ -75,15 +75,15 @@ function sg_doc_redirect () {
 
 // hide 'Add New' button so users are forced through the preliminary screen
 function sg_doc_hide_add_new() {
-    if (!isset($_GET['post_type'])) {
-        return;
-    }
-    $query = $_GET['post_type'];
-        if('sg_doc' == $query){
+    // if (!isset($_GET['post_type'])) {
+    //     return;
+    // }
+    // $query = $_GET['post_type'];
+    //     if('sg_doc' == $query){
           echo '<style type="text/css">
-            .add-new-h2 {display:none;}
+            body.post-type-sg_doc .add-new-h2 {display:none;}
             </style>';}
-    }
+    // }
 add_action('admin_head', 'sg_doc_hide_add_new');
 
         ?>

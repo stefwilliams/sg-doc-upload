@@ -34,11 +34,15 @@ $args = array (
 );
 
 
-$the_doc_ids = array();
-$output = '<ul>';
+
 
 $the_docs = new WP_Query( $args );
 
+if ($the_docs->post_count == 0) {
+	return "No documents have been uploaded yet.";
+}
+
+$output = '<ul>';
 // The Loop
 	while ( $the_docs->have_posts() ) {
 	$the_docs->the_post();
