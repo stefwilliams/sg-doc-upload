@@ -92,11 +92,11 @@ if($_FILES[$uploaded_file]['size'] > 0 ) {
     $file = $_FILES[$uploaded_file];
 
 
-    add_filter( 'upload_dir', 'change_upload_dir' );
+    add_filter( 'upload_dir', 'sg_doc_change_upload_dir' );
     // ADD NEW_NAME to the file array, so we can use this in wp_handle_upload_prefilter
     $new_filename = sg_regex_schema_filename($schema_id, 'string');
     $upload = wp_handle_upload( $file, array('test_form' => false, $file['new_name'] = $new_filename, ) );
-    remove_filter( 'upload_dir', 'change_upload_dir' );
+    remove_filter( 'upload_dir', 'sg_doc_change_upload_dir' );
 
     if(!isset($upload['error']) && isset($upload['file'])) {
         $upload = array_merge($upload, array('filesize'=>$file['size']));
@@ -129,7 +129,7 @@ if($_FILES[$uploaded_file]['size'] > 0 ) {
 }
 
 }
-function change_upload_dir($upload_dir) {
+function sg_doc_change_upload_dir($sg_doc_upload_dir) {
     global $post;
     $schema_applied = get_post_meta ($post->ID, 'schema_applied', true);
     $upload_subdir = get_post_meta($schema_applied, 'subdir', true);
@@ -140,20 +140,30 @@ if ($upload_subdir) {
 else {
     $upload_subdir = "/sg-docs";
 }
-    $upload_dir['path']   = $upload_dir['basedir'] . $upload_dir['subdir'] . $upload_subdir;
-    $upload_dir['url']    = $upload_dir['baseurl'] . $upload_dir['subdir'] . $upload_subdir;
+    $sg_doc_upload_dir['path']   = $sg_doc_upload_dir['basedir'] . $sg_doc_upload_dir['subdir'] . $upload_subdir;
+    $sg_doc_upload_dir['url']    = $sg_doc_upload_dir['baseurl'] . $sg_doc_upload_dir['subdir'] . $upload_subdir;
 
-    return $upload_dir;
+    return $sg_doc_upload_dir;
 }
 /* Save post meta on the 'save_post' hook. */
 add_action( 'save_post', 'save_sg_doc_meta', 10, 1 );
 
 function sg_schema_change_filename($file) {
-    $info = pathinfo($file['name']);
-    $ext  = empty($info['extension']) ? '' : '.' . $info['extension'];
-    $new_filename = $file['new_name'].$ext;
-    $file['name'] =  $new_filename;
-    return $file;
+// global $post;
+
+// error_log(var_export($_POST['schema_applied'],true));
+
+    if (!NULL == $_POST['schema_applied']) { //necessary to stop the filter interfering with other upload functionality
+            // error_log("schema_applied");
+            $info = pathinfo($file['name']);
+            $ext  = empty($info['extension']) ? '' : '.' . $info['extension'];
+            $new_filename = $file['new_name'].$ext;
+            $file['name'] =  $new_filename;
+            return $file;
+        }
+    else {
+        return $file;
+    }
 }
 add_filter('wp_handle_upload_prefilter', 'sg_schema_change_filename', 10);
 

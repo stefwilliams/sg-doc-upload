@@ -1,5 +1,8 @@
 <?php
 
+/* A query that doesn't worK:
+select * from sg_posts a, sg_posts b, sg_postmeta c where a.post_type='sg_doc_schema' and a.post_status = 'publish' and b.post_type = 'sg_doc' and b.post_status = 'publish' and c.meta_value = a.ID and b.ID = c.post_id and c.meta_key='schema_applied'
+*/
 function sg_doc_list( $atts ) {
     $a = shortcode_atts( array(
         'schema_id' => 'all',
@@ -8,12 +11,14 @@ function sg_doc_list( $atts ) {
     ), $atts );
 
 	if ('all' == $a['schema_id']) {
-		$schema_id = "";
-		$compare = "NOT IN";
+
+		$the_schemas = new WP_Query (array('post_type' => 'sg_doc_schema', 'fields' => 'ids', 'orderby' => 'ID', 'order' => $a['order']));
+		wp_reset_postdata();
+		$the_schema_ids = implode(',',$the_schemas->posts);
+		$schema_id = $the_schema_ids;
 	}
 	else {
 		$schema_id = $a['schema_id'];
-		$compare = "IN";
 	}
 
 $args = array (
@@ -22,27 +27,35 @@ $args = array (
 	'post_status' => 'publish',
 	'posts_per_page' => $a['limit'],
 	'order' => $a['order'],
-	'orderby' => 'title',
+	'orderby' => 'title meta_value_num',
     'meta_query' => array (
     	array(
          'key' => 'schema_applied',		//(string) - Custom field key.
          'value' => $schema_id, 		//(string/array) - Custom field value (Note: Array support is limited to a compare value of 'IN', 'NOT IN', 'BETWEEN', or 'NOT BETWEEN')
          'type' => 'NUMERIC',			//(string) - Custom field type. Possible values are 'NUMERIC', 'BINARY', 'CHAR', 'DATE', 'DATETIME', 'DECIMAL', 'SIGNED', 'TIME', 'UNSIGNED'. Default value is 'CHAR'.
-         'compare' => $compare,			//(string) - Operator to test. Possible values are '=', '!=', '>', '>=', '<', '<=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN'. Default value is '='.
+         'compare' => 'IN',			//(string) - Operator to test. Possible values are '=', '!=', '>', '>=', '<', '<=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN'. Default value is '='.
        ),	
     )
 );
 
 
-
-
 $the_docs = new WP_Query( $args );
+
+$the_docs->set('schema_x' , 'schema_y');
+
+echo "<pre>";
+print_r($the_schema_ids);
+print_r($the_docs);
+echo "</pre>";
+
 
 if ($the_docs->post_count == 0) {
 	return "No documents have been uploaded yet.";
 }
+foreach ($the_schemas->posts as $the_schema_id) {
+	echo "<h3>".get_the_title($the_schema_id)."</h3>";
 
-$output = '<ul>';
+	$output = '<ul>';
 // The Loop
 	while ( $the_docs->have_posts() ) {
 	$the_docs->the_post();
@@ -50,6 +63,7 @@ $output = '<ul>';
 		$post_id = get_the_ID();
 		
 		$schema_id = get_post_meta( $post_id, 'schema_applied', true );
+
 		$uploaded_file = unserialize(get_post_meta( $post_id, 'file_upload', true ));
 		$display_schema = get_post_meta( $schema_id, 'display', true );
 
@@ -64,7 +78,7 @@ $output = '<ul>';
 
 		$output .= "<li><a href='".$uploaded_file['url']."'>" . $the_title ."</a>". " (".$filesize.")</li>";
 	}
-
+}
 /* Restore original Post Data */
 wp_reset_postdata();
 
